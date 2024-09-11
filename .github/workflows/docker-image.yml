@@ -31,7 +31,7 @@ jobs:
   deploy:
   
     needs: build
-    name: Deploy image
+    name: deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -54,5 +54,6 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker stop tracker || true'
         ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker rm tracker || true'
     - name: Run new container
+    # Changed 80:3000 to 3000:3000 to use with nginx.
       run: |
-        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker run -d --name tracker -p 80:3000 jamesathanasiou/tracker:latest'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker run -d --name tracker -p 3000:3000 jamesathanasiou/tracker:latest'
