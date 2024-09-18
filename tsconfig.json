@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "es6",
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "outDir": "./dist",
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+    },
+    "exclude": [
+      "node_modules", 
+      "tests"
+    ]
+  }
+  
