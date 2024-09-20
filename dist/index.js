@@ -1,15 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-const port = 3000;
-app.use(express_1.default.json());
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const testRoutes = require('./routes/test_routes');
+const port = process.env.APP_PORT;
 app.get("/", (req, res) => {
     return res.json({ message: "Hello world!!!" });
 });
+app.use('/test', testRoutes);
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
