@@ -1,18 +1,18 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "./dist",
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "noImplicitAny": true
-    },
-    "exclude": [
-      "node_modules", 
-      "tests"
-    ]
-  }
-  
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules", 
+    "tests"
+  ]
+}
