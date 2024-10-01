@@ -7,4 +7,4 @@ COPY . .
 EXPOSE 3000
 RUN chown -R node /usr/src/app
 USER node
-CMD ["yarn", "start"]
+CMD ["yarn", "start_test"]
