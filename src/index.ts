@@ -8,7 +8,7 @@ const testRoutes: Router = require('./routes/test_routes');
 const port = process.env.APP_PORT ?? 3000;
 
 app.get("/", (req: Request, res: Response) => {
-  return res.json({ message: "Hello world!!" });
+  return res.json({ message: "I am nice and work in a docker container" });
 });
 
 app.use('/test', testRoutes);
