@@ -1,6 +1,6 @@
-const getNumber = ():Number =>
+const getNumber = (): number =>
 {
     return Math.floor((Math.random() * 100) + 1);
 }
 
-module.exports = getNumber;
+export { getNumber };

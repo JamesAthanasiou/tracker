@@ -1,8 +1,7 @@
 import { Database } from './types.js'
 import { Pool } from 'pg'
 import { Kysely, PostgresDialect } from 'kysely'
-
-require('dotenv').config()
+import 'dotenv/config';
 
 // how Kysely communicates with db
 const dialect = new PostgresDialect({
