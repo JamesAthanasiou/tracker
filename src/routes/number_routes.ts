@@ -5,7 +5,7 @@ import { getNumber } from '../service/number_gen_service';
 const dbInMem: any = db_in_mem;
 const numberRouter: Router = express.Router();
 
-numberRouter.get("/", (req: Request, res: Response) => {
+numberRouter.get("/routes", (req: Request, res: Response) => {
   dbInMem['number'] = getNumber();
   return res.json({ routes: ['new', 'previous' ] });
 });
