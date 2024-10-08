@@ -1,48 +1,47 @@
 version: '3.8'
 # For now, db is on server. If project had more traffic, would want to move db out into managed db solution and not on same server as backend.
 services:
-  backend:
-    build:
-      context: ./
-      target: builder
-    depends_on:
-      - db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    ports:
-      - 3000:3000
-    # Alternative. Could just run yarn dev with bind mounts
-    # volumes:
-    #   - ./:/usr/src/app
-    # Not sure this is worth it since it takes 3 seconds to rebuild and start. Better off developing not in a container?
-    # Also requires tsc -w outside of container to change ./dist
-    develop:
-      watch:
-        - action: rebuild
-          path: ./dist
-          target: /usr/src/app
-          ignore:
-            - node_modules/
+    backend:
+        build:
+            context: ./
+            target: builder
+        depends_on:
+            - db
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        ports:
+            - 3000:3000
+        # Alternative. Could just run yarn dev with bind mounts
+        # volumes:
+        #   - ./:/usr/src/app
+        # Not sure this is worth it since it takes 3 seconds to rebuild and start. Better off developing not in a container?
+        # Also requires tsc -w outside of container to change ./dist
+        develop:
+            watch:
+                - action: rebuild
+                  path: ./dist
+                  target: /usr/src/app
+                  ignore:
+                      - node_modules/
 
-  db:
-    image: postgres
-    restart: always
-    user: postgres
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    expose:
-      - ${DB_PORT}
-    healthcheck:
-      test: [ "CMD", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    db:
+        image: postgres
+        restart: always
+        user: postgres
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        expose:
+            - ${DB_PORT}
+        healthcheck:
+            test: ['CMD', 'pg_isready']
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
 volumes:
-  db-data:
-
+    db-data:

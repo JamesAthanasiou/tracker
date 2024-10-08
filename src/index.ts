@@ -9,13 +9,13 @@ const port = process.env.APP_PORT ?? 3000;
 
 app.use(bodyParser.json());
 
-app.get("/", (req: Request, res: Response) => {
-  return res.json({ message: "I am nice and work in a docker container" });
+app.get('/', (req: Request, res: Response) => {
+    return res.json({ message: 'I am nice and work in a docker container' });
 });
 
 app.use('/number', numberRouter);
 app.use('/person', personRouter);
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
