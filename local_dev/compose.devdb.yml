@@ -1,0 +1,22 @@
+# local dev just uses db in a container, everything else will be used locally.
+services:
+    db:
+        build:
+            context: ./
+        restart: always
+        user: postgres
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        ports:
+            - ${DB_PORT}:${DB_PORT}
+        healthcheck:
+            test: ['CMD', 'pg_isready']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    db-data:
