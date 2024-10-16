@@ -3,10 +3,12 @@ import { numberRouter } from './routes/number_routes';
 import 'dotenv/config';
 import { personRouter } from './routes/person_routes';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const app: Application = express();
 const port = process.env.APP_PORT ?? 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', (req: Request, res: Response) => {
