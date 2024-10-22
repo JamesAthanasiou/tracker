@@ -1,5 +1,8 @@
 import express, { Request, Response, Router } from 'express';
-import { createPerson, findPeople } from '../database/person_repository';
+import {
+    createPerson,
+    findPeople,
+} from '../database/repositories/person_repository';
 import { NewPerson } from '../database/types';
 
 const personRouter: Router = express.Router();

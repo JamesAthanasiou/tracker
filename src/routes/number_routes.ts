@@ -1,8 +1,7 @@
 import express, { Request, Response, Router } from 'express';
-import { db_in_mem } from '../database/in_memory_db';
 import { getNumber } from '../service/number_gen_service';
 
-const dbInMem: any = db_in_mem;
+const dbInMem: any = {};
 const numberRouter: Router = express.Router();
 
 numberRouter.get('/routes', (req: Request, res: Response) => {
