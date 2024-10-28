@@ -49,7 +49,7 @@ export async function updatePerson(id: number, updateWith: PersonUpdate) {
 
 export async function createPerson(person: NewPerson) {
     // TODO add validation somewhere to block incorrect gender assignment.
-    
+
     return await db
         .insertInto('person')
         .values(person)

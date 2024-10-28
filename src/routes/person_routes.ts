@@ -9,7 +9,7 @@ const personRouter: Router = express.Router();
 
 personRouter.get('/routes', (req: Request, res: Response) => {
     return res.json({
-        routes: ['GET:show-all', 'POST:create', 'POST:update', 'POST:remove'],
+        routes: ['GET:show-all', 'POST:create'],
     });
 });
 

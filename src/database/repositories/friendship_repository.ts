@@ -1,40 +1,70 @@
 import { db } from '../database';
-import { FriendshipUpdate, Friendship, NewFriendship } from '../types';
+import { Friendship, NewFriendship } from '../types';
 
-export async function findFriends(id: number) {
+// export async function findFriends(id: number) {
+//     return await db
+//         .selectFrom('person')
+//         // TODO implement correctly. Probably need subquery to join and pull friends for each person_num option since our person could be either left or right.
+//         // see https://kysely.dev/docs/examples/join/subquery-join
+//         .leftJoin('friendship', (join) =>
+//             join.onRef('friendship.person_1_id', '=', 'person.id')
+//         )
+//         .leftJoin('person', (join) =>
+//             join.onRef('person.id', '=', 'friendship.person_2_id')
+//         )
+//         .where('person.id', '=', id)
+//         .selectAll()
+//         .execute();
+// }
+
+async function getFriendship(friendship: NewFriendship) {
+    const cleanFriendship = cleanFriendshipIds(friendship);
+    const id1 = cleanFriendship.person_1_id;
+    const id2 = cleanFriendship.person_2_id;
+
     return await db
-        .selectFrom('person')
-        // TODO implement correctly. Probably need subquery to join and pull friends for each person_num option since our person could be either left or right.
-        // see https://kysely.dev/docs/examples/join/subquery-join
-        .leftJoin('friendship', (join) =>
-            join.onRef('friendship.person_1_id', '=', 'person.id')
+        .selectFrom('friendship')
+        .leftJoin('person as p1', (join) =>
+            join.onRef('friendship.person_1_id', '=', 'p1.id')
         )
-        .leftJoin('person', (join) =>
-            join.onRef('person.id', '=', 'friendship.person_2_id')
+        .innerJoin('person as p2', (join) =>
+            join.onRef('friendship.person_2_id', '=', 'p2.id')
         )
-        .where('person.id', '=', id)
+        .where('friendship.person_1_id', '=', id1)
+        .where('friendship.person_2_id', '=', id2)
         .selectAll()
         .execute();
 }
 
 export async function createFriendship(friendship: NewFriendship) {
-    // TODO add proper error handling.
-    if (friendship.person_1_id == friendship.person_2_id) {
-        throw new Error('A Person cannot have a friendship with themself');
-    }
+    const cleanFriendship = cleanFriendshipIds(friendship);
 
-    if (friendship.person_1_id < friendship.person_2_id) {
-        [friendship.person_1_id, friendship.person_2_id] = [
-            friendship.person_2_id,
-            friendship.person_1_id,
-        ];
+    if ((await getFriendship(cleanFriendship)).length !== 0) {
+        throw new Error('Cannot add existing friendship');
     }
 
     return await db
         .insertInto('friendship')
-        .values(friendship)
+        .values(cleanFriendship)
         .returningAll()
         .executeTakeFirstOrThrow();
+}
+
+function cleanFriendshipIds(
+    friendship: Friendship | NewFriendship
+): NewFriendship {
+    let person_1_id = friendship.person_1_id;
+    let person_2_id = friendship.person_2_id;
+
+    if (person_1_id == person_2_id) {
+        throw new Error('A Person cannot have a friendship with themself');
+    }
+
+    if (person_1_id < person_2_id) {
+        [person_1_id, person_2_id] = [person_2_id, person_1_id];
+    }
+
+    return { person_1_id: person_1_id, person_2_id: person_2_id };
 }
 
 // TODO add additional functionality for updating and deleting.
