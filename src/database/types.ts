@@ -13,6 +13,7 @@ import {
 export interface Database {
     person: PersonTable;
     friendship: FriendshipTable;
+    user: UserTable;
 }
 
 export interface PersonTable {
@@ -48,3 +49,17 @@ export interface FriendshipTable {
 export type Friendship = Selectable<FriendshipTable>;
 export type NewFriendship = Insertable<FriendshipTable>;
 export type FriendshipUpdate = Updateable<FriendshipTable>;
+
+export interface UserTable {
+    id: Generated<number>;
+    username: string;
+    password: string;
+    person_id: number;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    updated_at: ColumnType<Date, string | undefined, string | undefined>;
+}
+
+export type User = Selectable<UserTable>;
+export type NewUser = Insertable<UserTable>;
+export type UserUpdate = Updateable<UserTable>;
