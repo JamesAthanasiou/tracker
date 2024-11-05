@@ -3,14 +3,16 @@ import { createPerson } from '../database/repositories/person_repository';
 import { NewPerson, NewUser } from '../database/types';
 import {
     createUser,
-    findUserById,
+    // findUserById,
 } from '../database/repositories/user_repository';
 import { hash } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { getEnvVar } from '../services/get_env_var';
 
 const userRouter: Router = express.Router();
 
 userRouter.post('/create', create);
-userRouter.get('/:id', get);
+// userRouter.get('/:id', get);
 
 async function create(req: Request, res: Response) {
     // When we create a user, we also create a person. User cannot use existing person for now.
@@ -35,15 +37,21 @@ async function create(req: Request, res: Response) {
         person_id: person.id,
     };
 
+    // TODO should this be part of the auth file? 
     const user = await createUser(userData);
+    const token = sign(user, getEnvVar('SECRET_KEY'));
 
-    return res.json(user);
+    return res.json({
+        user: user,
+        token: token,
+    });
 }
 
-async function get(req: Request, res: Response) {
-    const userId = Number(req.params.id);
+// TODO remove?
+// async function get(req: Request, res: Response) {
+//     const userId = Number(req.params.id);
 
-    return await res.json(findUserById(userId));
-}
+//     return await res.json(findUserById(userId));
+// }
 
 export { userRouter };

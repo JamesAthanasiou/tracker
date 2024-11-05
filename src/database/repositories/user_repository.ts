@@ -3,7 +3,8 @@ import { db } from '../database';
 import { NewUser } from '../types';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 
-export async function findUserById(id: number) {
+// TODO, unused. Delete?
+export async function findUserByIdWithAggregate(id: number) {
     return await db
         .selectFrom('user')
         .where('user.id', '=', id)
@@ -16,6 +17,14 @@ function person(person_id: Expression<number>) {
     return jsonObjectFrom(
         db.selectFrom('person').selectAll().where('person.id', '=', person_id)
     );
+}
+
+export async function findOrFailUserByUsername(name: string) {
+    return await db
+        .selectFrom('user')
+        .where('user.username', '=', name)
+        .selectAll()
+        .executeTakeFirstOrThrow();
 }
 
 export async function createUser(user: NewUser) {

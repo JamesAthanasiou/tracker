@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { getNumber } from '../service/number_gen_service';
+import { getNumber } from '../services/number_gen_service';
 
 const dbInMem: any = {};
 const numberRouter: Router = express.Router();

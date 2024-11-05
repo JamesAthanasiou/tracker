@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { friendshipRouter } from './routes/friendship_routes';
 import { userRouter } from './routes/user_routes';
+import { authRouter } from './routes/login_routes';
 
 const app: Application = express();
 const port = process.env.APP_PORT ?? 3000;
@@ -21,6 +22,7 @@ app.use('/number', numberRouter);
 app.use('/person', personRouter);
 app.use('/friendship', friendshipRouter);
 app.use('/user', userRouter);
+app.use('/', authRouter);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
