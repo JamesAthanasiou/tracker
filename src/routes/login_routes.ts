@@ -4,10 +4,14 @@ import { findOrFailUserByUsername } from '../database/repositories/user_reposito
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { getEnvVar } from '../services/get_env_var';
+import { CurrentUser } from '../interfaces/CurrentUser';
 
 export const authRouter = express.Router();
 
 authRouter.post('/login', login);
+
+// TODO add refresh tokens
+export const tokenExpireTime = '1h';
 
 // TODO review next function.
 export async function login(req: Request, res: Response, next: NextFunction) {
@@ -19,7 +23,15 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             throw Error('Invalid email and/or password');
         }
 
-        const token = sign(user, getEnvVar('SECRET_KEY'));
+        const currentUser: CurrentUser = { id: user.id, username: user.username }
+
+        const token = sign(
+            currentUser,
+            getEnvVar('SECRET_KEY'),
+            // {
+            //     expiresIn: tokenExpireTime
+            // }
+        );
 
         return res.json({
             user: user,

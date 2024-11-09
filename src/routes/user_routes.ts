@@ -8,6 +8,7 @@ import {
 import { hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { getEnvVar } from '../services/get_env_var';
+import { CurrentUser } from '../interfaces/CurrentUser';
 
 const userRouter: Router = express.Router();
 
@@ -37,9 +38,13 @@ async function create(req: Request, res: Response) {
         person_id: person.id,
     };
 
-    // TODO should this be part of the auth file? 
+    // TODO should this be part of the auth file?
     const user = await createUser(userData);
-    const token = sign(user, getEnvVar('SECRET_KEY'));
+    const currentUser: CurrentUser = { id: user.id, username: user.username }
+    const token = sign(
+        currentUser,
+        getEnvVar('SECRET_KEY')
+    );
 
     return res.json({
         user: user,
