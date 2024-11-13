@@ -14,6 +14,8 @@ export interface Database {
     person: PersonTable;
     friendship: FriendshipTable;
     user: UserTable;
+    role: RoleTable;
+    role_user: RoleUserTable;
 }
 
 export interface PersonTable {
@@ -63,3 +65,27 @@ export interface UserTable {
 export type User = Selectable<UserTable>;
 export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
+
+export interface RoleTable {
+    id: Generated<number>;
+    role_name: string;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    updated_at: ColumnType<Date, string | undefined, string | undefined>;
+}
+
+export type Role = Selectable<RoleTable>;
+export type NewRole = Insertable<RoleTable>;
+export type RoleUpdate = Updateable<RoleTable>;
+
+export interface RoleUserTable {
+    role_id: number;
+    user_id: number;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    updated_at: ColumnType<Date, string | undefined, string | undefined>;
+}
+
+export type RoleUser = Selectable<RoleUserTable>;
+export type NewRoleUser = Insertable<RoleUserTable>;
+export type RoleUserUpdate = Updateable<RoleUserTable>;
