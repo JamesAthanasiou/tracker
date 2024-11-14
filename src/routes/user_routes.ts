@@ -40,11 +40,12 @@ async function create(req: Request, res: Response) {
 
     // TODO should this be part of the auth file?
     const user = await createUser(userData);
-    const currentUser: CurrentUser = { id: user.id, username: user.username }
-    const token = sign(
-        currentUser,
-        getEnvVar('SECRET_KEY')
-    );
+    const currentUser: CurrentUser = {
+        id: user.id,
+        person_id: user.person_id,
+        username: user.username,
+    };
+    const token = sign(currentUser, getEnvVar('SECRET_KEY'));
 
     return res.json({
         user: user,

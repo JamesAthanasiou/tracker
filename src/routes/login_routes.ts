@@ -23,11 +23,15 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             throw Error('Invalid email and/or password');
         }
 
-        const currentUser: CurrentUser = { id: user.id, username: user.username }
+        const currentUser: CurrentUser = {
+            id: user.id,
+            person_id: user.person_id,
+            username: user.username,
+        };
 
         const token = sign(
             currentUser,
-            getEnvVar('SECRET_KEY'),
+            getEnvVar('SECRET_KEY')
             // {
             //     expiresIn: tokenExpireTime
             // }
