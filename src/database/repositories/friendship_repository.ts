@@ -17,7 +17,7 @@ import { Friendship, NewFriendship } from '../types';
 //         .execute();
 // }
 
-async function getFriendship(friendship: NewFriendship) {
+async function getFriendship(friendship: NewFriendship | Friendship) {
     const cleanFriendship = cleanFriendshipIds(friendship);
     const id1 = cleanFriendship.person_1_id;
     const id2 = cleanFriendship.person_2_id;
@@ -43,11 +43,39 @@ export async function createFriendship(friendship: NewFriendship) {
         throw new Error('Cannot add existing friendship');
     }
 
+    return await db.transaction().execute(async (trx) => {
+        await trx
+            .insertInto('friendship')
+            .values(cleanFriendship)
+            .returningAll()
+            .executeTakeFirstOrThrow();
+    });
+}
+
+export async function getPersonFriends(person_id: number) {
     return await db
-        .insertInto('friendship')
-        .values(cleanFriendship)
-        .returningAll()
-        .executeTakeFirstOrThrow();
+        .selectFrom('person')
+        .selectAll()
+        .leftJoin('friendship as f1', (join) =>
+            join.onRef('f1.person_1_id', '=', 'person.id')
+        )
+        .leftJoin('person as p1', (join) =>
+            join.onRef('f1.person_2_id', '=', 'p1.id')
+        )
+        .where((eb) => eb.or([eb('f1.person_1_id', '=', person_id)]))
+        .unionAll(
+            db
+                .selectFrom('person')
+                .selectAll()
+                .leftJoin('friendship as f2', (join) =>
+                    join.onRef('f2.person_2_id', '=', 'person.id')
+                )
+                .leftJoin('person as p2', (join) =>
+                    join.onRef('f2.person_1_id', '=', 'p2.id')
+                )
+                .where((eb) => eb.or([eb('f2.person_2_id', '=', person_id)]))
+        )
+        .execute();
 }
 
 function cleanFriendshipIds(

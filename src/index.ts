@@ -7,7 +7,6 @@ import cors from 'cors';
 import { friendshipRouter } from './routes/friendship_routes';
 import { userRouter } from './routes/user_routes';
 import { authRouter } from './routes/login_routes';
-import { testProtectedRouter } from './routes/test_protected_route';
 import { authenticateToken } from './middleware/auth';
 
 const app: Application = express();
@@ -22,9 +21,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/number', numberRouter);
 app.use('/person', personRouter);
-app.use('/friendship', friendshipRouter);
+app.use('/friendship', authenticateToken, friendshipRouter);
 app.use('/user', userRouter);
-app.use('/protected', authenticateToken, testProtectedRouter);
 app.use('/', authRouter);
 
 app.listen(port, () => {
