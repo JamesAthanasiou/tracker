@@ -51,6 +51,7 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker stop tracker || true'
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker rm tracker || true'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo yes | docker image prune || true'
             - name: Run new container
               # Changed 80:3000 to 3000:3000 to use with nginx.
               run: |
