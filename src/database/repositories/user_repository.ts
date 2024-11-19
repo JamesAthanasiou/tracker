@@ -9,17 +9,20 @@ export async function findUserByIdWithAggregate(id: number) {
         .selectFrom('user')
         .where('user.id', '=', id)
         .selectAll()
-        .select(({ ref }) => [person(ref('user.person_id')).as('person')])
+        .select(({ ref }) => [
+            findPersonById(ref('user.person_id')).as('person'),
+        ])
         .executeTakeFirst();
 }
 
-function person(person_id: Expression<number>) {
+function findPersonById(id: Expression<number>) {
     return jsonObjectFrom(
-        db.selectFrom('person').selectAll().where('person.id', '=', person_id)
+        db.selectFrom('person').selectAll().where('person.id', '=', id)
     );
 }
 
 export async function findOrFailUserByUsername(name: string) {
+    // TODO make usernames unique in migration.
     return await db
         .selectFrom('user')
         .where('user.username', '=', name)

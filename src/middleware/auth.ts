@@ -1,18 +1,22 @@
-import { JwtPayload, verify } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import { getEnvVar } from '../services/get_env_var';
+import { CurrentUser } from '../interfaces/CurrentUser';
 
-export function authenticateToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('Authorization')?.split(' ')[1];;
+export function authenticateToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {
         verify(token, getEnvVar('SECRET_KEY'), (err) => {
-
             if (err) {
-                return res.sendStatus(403)
+                return res.sendStatus(403);
             }
-    
+
             next();
         });
     } catch {
@@ -27,12 +31,13 @@ export function checkUserAuthorized(
     next: NextFunction
 ) {
     try {
-        const token = req.header('Authorization')?.split(' ')[1];;
+        const token = req.header('Authorization')?.split(' ')[1];
 
         if (!token) return res.status(401).json({ error: 'Access denied' });
 
         verify(token, getEnvVar('SECRET_KEY'), function (err, decoded) {
-            if (decoded && (decoded as JwtPayload).id === req.params.id) {
+            if (decoded && (decoded as unknown as CurrentUser)?.id) {
+                // TODO add roles.
                 return next();
             } else {
                 return next({

@@ -14,7 +14,10 @@ export async function up(db: Kysely<any>): Promise<void> {
         .addColumn('created_at', 'timestamp', (col) =>
             col.defaultTo(sql`now()`).notNull()
         )
-        .addPrimaryKeyConstraint('friendship_pkey', ['person_1_id', 'person_2_id'])
+        .addPrimaryKeyConstraint('friendship_pkey', [
+            'person_1_id',
+            'person_2_id',
+        ])
         .addCheckConstraint(
             'person_insert_order_constraint',
             sql`person_1_id > person_2_id`
