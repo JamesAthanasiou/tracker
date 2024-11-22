@@ -28,18 +28,13 @@ async function create(req: Request, res: Response) {
         person_2_id: person_2_id,
     };
 
-    // TODO should the query in the repository be wrapped or should callers wrap it?
     try {
         const friendship = await createFriendship(friendshipData);
         return res.json(friendship);
     } catch (err) {
         console.error(err);
-        // JTODO this isn't working right.
-        return res.status(400).json({
-            error: {
-                message: (err as Error).message,
-            },
-        });
+
+        res.status(401).json({ error: 'Friend already added'});
     }
 }
 
