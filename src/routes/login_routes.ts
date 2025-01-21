@@ -48,3 +48,5 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         });
     }
 }
+
+// No logout route because we're using JWT, so only data is on client.

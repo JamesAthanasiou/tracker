@@ -4,9 +4,9 @@ import {
     createFriendship,
     getPersonFriends,
 } from '../database/repositories/friendship_repository';
-import { getEnvVar } from '../services/get_env_var';
-import { CurrentUser } from '../interfaces/CurrentUser';
-import { verify } from 'jsonwebtoken';
+// import { getEnvVar } from '../services/get_env_var';
+// import { CurrentUser } from '../interfaces/CurrentUser';
+// import { verify } from 'jsonwebtoken';
 
 export const friendshipRouter = express.Router();
 
@@ -39,15 +39,19 @@ async function create(req: Request, res: Response) {
 }
 
 async function getFriends(req: Request, res: Response) {
-    const token = req.header('Authorization')?.split(' ')[1];
+    const person_id = parseInt(req.query?.person_id as string);
+    return res.json(await getPersonFriends(person_id));
 
-    if (!token) {
-        return res.json([]);
-    }
+    // Left here for reference. TODO, remove later.
+    // const token = req.header('Authorization')?.split(' ')[1];
 
-    // Don't need other checks since auth middleware means we definitely have a user.
-    verify(token, getEnvVar('SECRET_KEY'), async (err, decoded) => {
-        const person_id = (decoded as CurrentUser).person_id;
-        return res.json(await getPersonFriends(person_id));
-    });
+    // if (!token) {
+    //     return res.json([]);
+    // }
+
+    // // Don't need other checks since auth middleware means we definitely have a user.
+    // verify(token, getEnvVar('SECRET_KEY'), async (err, decoded) => {
+    //     const person_id = (decoded as CurrentUser).person_id;
+    //     return res.json(await getPersonFriends(person_id));
+    // });
 }
