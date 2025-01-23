@@ -1,22 +1,6 @@
 import { db } from '../database';
 import { Friendship, NewFriendship } from '../types';
 
-// export async function findFriends(id: number) {
-//     return await db
-//         .selectFrom('person')
-//         // TODO implement correctly. Probably need subquery to join and pull friends for each person_num option since our person could be either left or right.
-//         // see https://kysely.dev/docs/examples/join/subquery-join
-//         .leftJoin('friendship', (join) =>
-//             join.onRef('friendship.person_1_id', '=', 'person.id')
-//         )
-//         .leftJoin('person', (join) =>
-//             join.onRef('person.id', '=', 'friendship.person_2_id')
-//         )
-//         .where('person.id', '=', id)
-//         .selectAll()
-//         .execute();
-// }
-
 async function getFriendship(friendship: NewFriendship | Friendship) {
     const cleanFriendship = cleanFriendshipIds(friendship);
     const id1 = cleanFriendship.person_1_id;
@@ -76,6 +60,16 @@ export async function getPersonFriends(person_id: number) {
                 .where((eb) => eb.or([eb('f2.person_2_id', '=', person_id)]))
         )
         .execute();
+}
+
+export async function deletePersonFriendships(person_id: number) {
+    return await db.transaction().execute(async (trx) => {
+        await trx
+            .deleteFrom('friendship')
+            .where('friendship.person_1_id', '=', person_id)
+            .where('friendship.person_2_id', '=', person_id)
+            .execute();
+    });
 }
 
 function cleanFriendshipIds(

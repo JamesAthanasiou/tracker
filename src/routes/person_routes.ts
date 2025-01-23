@@ -1,10 +1,12 @@
 import express, { Request, Response, Router } from 'express';
 import {
     createPerson,
+    deletePerson,
     findPeople,
     findPersonById,
 } from '../database/repositories/person_repository';
 import { NewPerson } from '../database/types';
+import { deletePersonFriendships } from '../database/repositories/friendship_repository';
 
 const personRouter: Router = express.Router();
 
@@ -17,6 +19,7 @@ personRouter.get('/routes', (req: Request, res: Response) => {
 personRouter.get('/show-all', showAll);
 personRouter.post('/create', create);
 personRouter.get('/:person_id', show);
+personRouter.post('/delete', del);
 
 async function show(req: Request, res: Response) {
     const person_id = req.params?.person_id;
@@ -45,6 +48,13 @@ async function create(req: Request, res: Response) {
 
     const person = await createPerson(personData);
     return res.json(person);
+}
+
+async function del(req: Request, res: Response) {
+    const person_id: number = req.body?.id;
+    await deletePersonFriendships(person_id);
+
+    return res.json(await deletePerson(person_id));
 }
 
 // TODO move into new service/handler/controller?

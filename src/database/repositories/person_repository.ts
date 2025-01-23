@@ -62,5 +62,5 @@ export async function deletePerson(id: number) {
         .deleteFrom('person')
         .where('id', '=', id)
         .returningAll()
-        .executeTakeFirst();
+        .executeTakeFirstOrThrow();
 }
