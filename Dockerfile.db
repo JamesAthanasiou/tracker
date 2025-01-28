@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM postgres:16
 
 # scripts copied here are run first time container is started
 COPY ./scripts/ /docker-entrypoint-initdb.d/

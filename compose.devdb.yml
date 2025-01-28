@@ -1,8 +1,10 @@
-# local dev just uses db in a container, everything else will be used locally.
+# This file is used if we only want a container with a db, no network. .env DB_HOST should be localhost.
+
 services:
     db:
         build:
             context: ./
+            dockerfile: ./Dockerfile.db
         restart: always
         user: postgres
         volumes:

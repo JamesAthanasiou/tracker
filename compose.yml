@@ -13,19 +13,6 @@ services:
             POSTGRES_DB: ${DB_NAME}
         ports:
             - 3000:3000
-        # Alternative. Could just run yarn dev with bind mounts
-        # volumes:
-        #   - ./:/usr/src/app
-        # Not sure this is worth it since it takes 3 seconds to rebuild and start. Better off developing not in a container?
-        # Also requires tsc -w outside of container to change ./dist
-        develop:
-            watch:
-                - action: rebuild
-                  path: ./dist
-                  target: /usr/src/app
-                  ignore:
-                      - node_modules/
-
     db:
         image: postgres
         restart: always

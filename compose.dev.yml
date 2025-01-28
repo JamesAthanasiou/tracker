@@ -1,0 +1,62 @@
+# TODO is for dev, but doesn't use bind mounts yet.
+services:
+    backend:
+        build:
+            context: ./
+            dockerfile: Dockerfile.dev
+        depends_on:
+            - db
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        restart: unless-stopped
+        expose:
+            - 3000
+        ports:
+            - 3000:3000
+        command: yarn start
+        
+        # # Alternative. Could just run yarn dev with bind mounts
+        # # volumes:
+        # #   - ./:/usr/src/app
+        # # Not sure this is worth it since it takes 3 seconds to rebuild and start. Better off developing not in a container?
+        # # Also requires tsc -w outside of container to change ./dist
+        # develop:
+        #     watch:
+        #         - action: rebuild
+        #           path: ./dist
+        #           target: /usr/src/app
+        #           ignore:
+        #               - node_modules/
+
+    db:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile.db
+        restart: always
+        user: postgres
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        ports:
+            - ${DB_PORT}:${DB_PORT}
+        healthcheck:
+            test: ['CMD', 'pg_isready']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    db-migration:
+        build:
+            context: ./
+        image: node:lts-alpine
+        depends_on:
+            db:
+                condition: service_healthy
+        command: yarn migrate
+
+volumes:
+    db-data:
