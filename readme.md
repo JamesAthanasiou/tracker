@@ -14,7 +14,7 @@ It's like a CRM, but for your friends. Basically it's a way to make sure you don
 
 Currently there is no public access as the project is still in development. This readme will be updated when there is a public demo available.
 
-## Development
+## Features Roadmap
 
 This section is a general todo list not organized by priority
 General:
@@ -25,3 +25,13 @@ General:
 -   Clean up routes file.
     Feature:
 -   Flesh out friend/person management
+
+## Development
+
+For development, project is run in Docker with containers for the app, db and migrations. The project is built with:
+`docker compose -f compose.dev.yml --env-file .env build`
+Note that if there is a change to migrations, the db-migration container must rebuilt to get the most recent migrations.js file.
+
+To start the project, run:
+`docker compose -f compose.dev.yml --env-file .env up`
+This automatically runs migrations and starts file watching for the typescript files on the local machine.

@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 WORKDIR /usr/src/app
 COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install --dev --silent && mv node_modules ../ && npm install -g typescript
+RUN yarn install --dev --silent && mv node_modules ../ && npm install -g typescript tsx
 COPY . .
 RUN chown -R node /usr/src/app
 USER node

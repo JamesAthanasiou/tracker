@@ -1,0 +1,10 @@
+# This is still dev, since we need to build the migration.
+FROM node:lts-alpine
+WORKDIR /usr/src/app
+COPY ["package.json", "yarn.lock", "./"]
+RUN yarn install --dev --silent && mv node_modules ../ && npm install -g typescript
+# TODO just copy script for db migration.
+COPY . .
+RUN chown -R node /usr/src/app
+USER node
+RUN yarn build

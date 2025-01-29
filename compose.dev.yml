@@ -1,6 +1,6 @@
-# TODO is for dev, but doesn't use bind mounts yet.
 services:
     backend:
+        container_name: backend-dev
         build:
             context: ./
             dockerfile: Dockerfile.dev
@@ -15,22 +15,13 @@ services:
             - 3000
         ports:
             - 3000:3000
-        command: yarn start
-        
-        # # Alternative. Could just run yarn dev with bind mounts
-        # # volumes:
-        # #   - ./:/usr/src/app
-        # # Not sure this is worth it since it takes 3 seconds to rebuild and start. Better off developing not in a container?
-        # # Also requires tsc -w outside of container to change ./dist
-        # develop:
-        #     watch:
-        #         - action: rebuild
-        #           path: ./dist
-        #           target: /usr/src/app
-        #           ignore:
-        #               - node_modules/
+        command: yarn dev
+        volumes:
+            - ./:/usr/src/app
+            - /usr/src/app/node_modules
 
     db:
+        container_name: db-dev
         build:
             context: ./
             dockerfile: ./Dockerfile.db
@@ -50,12 +41,15 @@ services:
             retries: 5
 
     db-migration:
+        container_name: db-migration-dev
         build:
             context: ./
-        image: node:lts-alpine
+            dockerfile: ./Dockerfile.db-migration
         depends_on:
             db:
                 condition: service_healthy
+        volumes:
+            - /usr/src/app/node_modules
         command: yarn migrate
 
 volumes:
