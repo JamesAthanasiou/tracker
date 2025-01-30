@@ -13,6 +13,7 @@ services:
             - ${APP_PORT}
         ports:
             - ${APP_PORT}:${APP_PORT}
+        env_file: ".env"
         command: yarn start
     db:
         build:
@@ -33,14 +34,11 @@ services:
             timeout: 5s
             retries: 5
     db-migration:
-        # TODO figure out why image isn't working. 
-        # image: jamesathanasiou/tracker:latest
-        build:
-            context: ./
-            dockerfile: ./Dockerfile.db-migration
+        image: jamesathanasiou/tracker:latest
         depends_on:
             db:
                 condition: service_healthy
+        env_file: ".env"
         command: yarn migrate
 
 volumes:
