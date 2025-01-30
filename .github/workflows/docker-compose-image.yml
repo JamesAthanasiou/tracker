@@ -65,4 +65,4 @@ jobs:
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env build'
             - name: docker-compose run
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env  up'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env up -d'
