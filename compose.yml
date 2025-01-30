@@ -1,20 +1,23 @@
-# TODO, get this working. Right now, we're deploying using only the docker file.
 # For now, db is on server. If project had more traffic, would want to move db out into managed db solution and not on same server as backend.
 services:
     backend:
-        build:
-            context: ./
-            target: builder
+        image: jamesathanasiou/tracker:latest
         depends_on:
             - db
         environment:
             POSTGRES_USER: ${DB_USER}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
             POSTGRES_DB: ${DB_NAME}
+        restart: unless-stopped
+        expose:
+            - ${APP_PORT}
         ports:
-            - 3000:3000
+            - ${APP_PORT}:${APP_PORT}
+        command: yarn start
     db:
-        image: postgres
+        build:
+            context: ./
+            dockerfile: ./Dockerfile.db
         restart: always
         user: postgres
         volumes:
@@ -22,13 +25,23 @@ services:
         environment:
             - POSTGRES_DB=${DB_NAME}
             - POSTGRES_PASSWORD=${DB_PASSWORD}
-        expose:
-            - ${DB_PORT}
+        ports:
+            - ${DB_PORT}:${DB_PORT}
         healthcheck:
             test: ['CMD', 'pg_isready']
             interval: 10s
             timeout: 5s
             retries: 5
+    db-migration:
+        # TODO figure out why image isn't working. 
+        # image: jamesathanasiou/tracker:latest
+        build:
+            context: ./
+            dockerfile: ./Dockerfile.db-migration
+        depends_on:
+            db:
+                condition: service_healthy
+        command: yarn migrate
 
 volumes:
     db-data:
