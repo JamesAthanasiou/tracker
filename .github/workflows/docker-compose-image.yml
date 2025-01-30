@@ -52,22 +52,17 @@ jobs:
                 REMOTE_HOST: "${{ secrets.EC2_IP }}"
                 REMOTE_USER: "ec2-user"
                 TARGET: "~/tracker/"
-
-            # TODO: prepoulate known hosts. In a real prod environment, ignoring host key checks is a serious security issue.
-            # As a reminder, from initial setup the directory and .env file were added.
-            - name: Change to project directory
-              run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }} 'sudo cd ~/tracker/'
-
             - name: Stop running containers
               # Stop all containers, remove them, prune dangling images.
+              # TODO: prepoulate known hosts. In a real prod environment, ignoring host key checks is a serious security issue.
               run: |
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker stop $(docker ps -a -q) || true'
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker rm $(docker ps -a -q) || true'
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo yes | docker image prune || true'
+            # As a reminder, from initial setup the directory and .env file were added.
             - name: docker-compose build
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file .env build'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file tracker/.env build'
             - name: docker-compose run
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file .env up'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file tracker/.env  up'
