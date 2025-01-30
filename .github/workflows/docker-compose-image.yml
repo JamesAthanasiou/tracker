@@ -62,7 +62,7 @@ jobs:
             # As a reminder, from initial setup the directory and .env file were added.
             - name: docker-compose build
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file tracker/.env build'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env build'
             - name: docker-compose run
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f compose.yml --env-file tracker/.env  up'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env  up'
