@@ -10,6 +10,7 @@ import { sign } from 'jsonwebtoken';
 import { getEnvVar } from '../services/get_env_var';
 import { CurrentUser } from '../interfaces/CurrentUser';
 
+// TODO refactor this to be part of auth routes.
 const userRouter: Router = express.Router();
 
 userRouter.post('/create', create);
@@ -18,9 +19,9 @@ userRouter.post('/create', create);
 async function create(req: Request, res: Response) {
     // When we create a user, we also create a person. User cannot use existing person for now.
     const personData: NewPerson = {
-        gender: req.body.person.gender,
-        first_name: req.body.person.first_name,
-        last_name: req.body.person.last_name,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        gender: req.body.gender,
     };
 
     const person = await createPerson(personData);
