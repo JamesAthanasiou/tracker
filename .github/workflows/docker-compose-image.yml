@@ -52,17 +52,18 @@ jobs:
                 REMOTE_HOST: "${{ secrets.EC2_IP }}"
                 REMOTE_USER: "ec2-user"
                 TARGET: "~/tracker/"
-            - name: Stop running containers
-              # Stop all containers, remove them, prune dangling images.
+            - name: Stop running containers and prune
               # TODO: prepoulate known hosts. In a real prod environment, ignoring host key checks is a serious security issue.
               run: |
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker stop $(docker ps -a -q) || true'
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo docker rm $(docker ps -a -q) || true'
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'sudo yes | docker image prune || true'
-            # As a reminder, from initial setup the directory and .env file were added.
+            # Reminder: from initial setup the directory and .env file were added.
+            # This is just to tack on the entry scripts to the postgres image.
             - name: docker-compose build
               run: |
                   ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env build'
             - name: docker-compose run
+              # Reminder: we repull the main image since they are all tagged latest.
               run: |
-                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env up -d'
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }}  'docker-compose -f ~/tracker/compose.yml --env-file ~/tracker/.env up -d --pull always'
