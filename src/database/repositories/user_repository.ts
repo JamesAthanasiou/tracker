@@ -31,7 +31,16 @@ export async function findOrFailUserByUsername(name: string) {
 }
 
 export async function createUser(user: NewUser) {
-    // TODO check username not in db
+    const existingUser = await db
+        .selectFrom('user')
+        .where('username', '=', user.username)
+        .selectAll()
+        .executeTakeFirst();
+
+    if (existingUser != undefined) {
+        throw Error('Username taken');
+    }
+
     return await db
         .insertInto('user')
         .values(user)
