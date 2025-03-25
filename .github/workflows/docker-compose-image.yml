@@ -45,13 +45,13 @@ jobs:
                   chmod 400 key.pem
             # TODO: a way to only pull in these files and not the whole repo?
             - name: Pull Dockerfiles and compose.yml
-              uses:  easingthemes/ssh-deploy@v5.1.0 
+              uses: easingthemes/ssh-deploy@v5.1.0
               env:
-                SSH_PRIVATE_KEY: ${{ secrets.EC2_KEY_PERM  }}
-                SOURCE: "./"
-                REMOTE_HOST: "${{ secrets.EC2_IP }}"
-                REMOTE_USER: "ec2-user"
-                TARGET: "~/tracker/"
+                  SSH_PRIVATE_KEY: ${{ secrets.EC2_KEY_PERM  }}
+                  SOURCE: './'
+                  REMOTE_HOST: '${{ secrets.EC2_IP }}'
+                  REMOTE_USER: 'ec2-user'
+                  TARGET: '~/tracker/'
             - name: Stop running containers and prune
               # TODO: prepoulate known hosts. In a real prod environment, ignoring host key checks is a serious security issue.
               run: |

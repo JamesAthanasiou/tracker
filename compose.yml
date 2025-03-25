@@ -13,7 +13,7 @@ services:
             - ${APP_PORT}
         ports:
             - ${APP_PORT}:${APP_PORT}
-        env_file: ".env"
+        env_file: '.env'
         command: yarn start
     db:
         build:
@@ -38,7 +38,7 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-        env_file: ".env"
+        env_file: '.env'
         command: yarn migrate
 
 volumes:
