@@ -5,6 +5,7 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { getEnvVar } from '../services/get_env_var';
 import { CurrentUser } from '../interfaces/CurrentUser';
+import { InvalidLoginError } from '../error/InvalidLoginError';
 
 export const authRouter = express.Router();
 
@@ -13,14 +14,13 @@ authRouter.post('/login', login);
 // TODO add refresh tokens
 export const tokenExpireTime = '1h';
 
-// TODO review next function.
 export async function login(req: Request, res: Response, next: NextFunction) {
+
     try {
         const user = await findOrFailUserByUsername(req.body.username);
         const isMatch = await compare(req.body.password, user.password);
-
         if (!isMatch) {
-            throw Error('Invalid email and/or password');
+            throw new Error();
         }
 
         const currentUser: CurrentUser = {
@@ -42,10 +42,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             token: token,
         });
     } catch {
-        return next({
-            status: 400,
-            message: 'Invalid username and/or password',
-        });
+        next(new InvalidLoginError('Invalid email and/or password'))
+        return;
     }
 }
 
