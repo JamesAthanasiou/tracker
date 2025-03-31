@@ -15,7 +15,6 @@ authRouter.post('/login', login);
 export const tokenExpireTime = '1h';
 
 export async function login(req: Request, res: Response, next: NextFunction) {
-
     try {
         const user = await findOrFailUserByUsername(req.body.username);
         const isMatch = await compare(req.body.password, user.password);
@@ -42,7 +41,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
             token: token,
         });
     } catch {
-        next(new InvalidLoginError('Invalid email and/or password'))
+        next(new InvalidLoginError('Invalid email and/or password'));
         return;
     }
 }
