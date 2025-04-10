@@ -37,9 +37,10 @@ export async function createUser(user: NewUser) {
         .selectAll()
         .executeTakeFirst();
 
-    if (existingUser != undefined) {
-        throw Error('Username taken');
-    }
+    //  JTODO doens't work right
+    // if (existingUser != undefined) {
+    //     throw Error('Username taken');
+    // }
 
     return await db
         .insertInto('user')
