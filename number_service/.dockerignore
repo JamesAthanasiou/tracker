@@ -1,0 +1,28 @@
+# Don't include Git history
+.git
+.gitignore
+
+# Don't include IDE or editor settings
+.idea
+.vscode
+
+# Don't include OS files
+.DS_Store
+Thumbs.db
+
+# Ignore test reports and logs
+*.log
+*.tmp
+*.bak
+
+# Ignore local environment config
+.env
+
+# Ignore build output (will be regenerated in Docker)
+target/
+build/
+
+# Ignore Docker files that shouldn't be inside the container
+.dockerignore
+docker-compose.yml
+Dockerfile

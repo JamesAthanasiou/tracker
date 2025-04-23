@@ -17,6 +17,7 @@ services:
             POSTGRES_USER: ${DB_USER}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
             POSTGRES_DB: ${DB_NAME}
+            NUMBER_SERVICE_URL: http://number-service:8080
         restart: unless-stopped
         expose:
             - ${APP_PORT}
@@ -24,7 +25,12 @@ services:
         volumes:
             - ./:/usr/src/app
             - /usr/src/app/node_modules
-
+    number-service:
+        container_name: number-service
+        build:
+            context: ./number_service
+        expose:
+            - 8080
     db:
         container_name: db-dev
         build:

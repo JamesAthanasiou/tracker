@@ -1,0 +1,39 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.sw?
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+
+# Environment files
+.env
+*.env
+
+# Mac/Linux file system stuff
+*.DS_Store
+.Spotlight-V100
+.Trashes
+
+# Java tooling
+hs_err_pid*
+replay_pid*
+
+# Build tools
+build/
+dependency-reduced-pom.xml
