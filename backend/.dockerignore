@@ -1,0 +1,3 @@
+# We ignore node_modules so we don't copy them, instead build inside container to match container arch
+node_modules
+logs
