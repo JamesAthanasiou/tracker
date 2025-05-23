@@ -7,7 +7,7 @@ import {
 } from '../database/repositories/user_repository';
 import { hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { getEnvVar } from '../services/get_env_var';
+import { getEnvVar } from '../utils/get_env_var';
 import { CurrentUser } from '../interfaces/CurrentUser';
 
 // TODO refactor this to be part of auth routes.

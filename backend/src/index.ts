@@ -9,7 +9,8 @@ import { userRouter } from './routes/user_routes';
 import { authRouter } from './routes/login_routes';
 import { authenticateToken } from './middleware/auth';
 import { pinoHttp } from 'pino-http';
-import { logger, logStream } from './middleware/logger';
+import { logger } from './middleware/logger';
+import { generalError, logError, notFoundError } from './utils/error_handler';
 
 const app: Application = express();
 const port = process.env.APP_PORT ?? 3000;
@@ -27,20 +28,9 @@ app.use('/user', userRouter);
 app.use('/', authRouter);
 
 // Error handling
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    const errorMessage = `${new Date().toISOString()} - ${req.method} ${req.url} - ${err.message}\n`;
-    console.error(errorMessage);
-    logStream.write(errorMessage);
-    next(err);
-});
-app.use((req: Request, res: Response, next: NextFunction) =>
-    res.status(404).json({ message: 'Not Found' })
-);
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || 500).json({
-        message: err.message || 'Server error',
-    });
-});
+app.use(logError);
+app.use(notFoundError);
+app.use(generalError);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);

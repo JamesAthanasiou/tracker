@@ -1,6 +1,6 @@
 import { verify } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { getEnvVar } from '../services/get_env_var';
+import { getEnvVar } from '../utils/get_env_var';
 
 export function authenticateToken(
     req: Request,
