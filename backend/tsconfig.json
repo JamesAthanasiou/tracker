@@ -8,8 +8,9 @@
         "outDir": "./dist",
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "types": ["jest"]
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "tests"]
+    "include": ["src/**/*", "tests/**/*"],
+    "exclude": ["node_modules"]
 }
