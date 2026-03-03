@@ -23,12 +23,14 @@ output "github_secrets_to_update" {
 locals {
   next_step_prod = <<-EOT
 
-    DNS is now pointed at ${aws_eip.tracker.public_ip}.
-    Wait ~60 seconds for propagation, then SSH in and bootstrap SSL:
+    The server is booting at ${aws_eip.tracker.public_ip}.
+    DNS is pointed. SSL bootstraps automatically — no manual steps needed.
 
+    The site will be live at https://jamesisonline.com in ~3-5 minutes.
+
+    To check progress:
       ssh -i ${path.module}/tracker-${var.environment}.pem ec2-user@${aws_eip.tracker.public_ip}
-      cd ~/tracker
-      bash certbot/scripts/init-letsencrypt.sh
+      sudo tail -f /var/log/user-data.log
 
   EOT
 

@@ -26,6 +26,11 @@ On first boot the EC2 instance runs `user_data.sh.tpl` which installs Docker and
   aws sts get-caller-identity
   ```
   If it errors, run `aws configure` with your IAM access key and secret.
+- Node and yarn installed locally — required for the initial frontend build on `apply`:
+  ```bash
+  brew install node
+  npm install -g yarn
+  ```
 
 ---
 
@@ -71,8 +76,11 @@ The server takes ~3 minutes to finish booting. By the time it's done, the site s
 To destroy all Terraform-managed resources:
 
 ```bash
+aws s3 rm s3://jamesisonline --recursive
 terraform destroy
 ```
+
+The S3 bucket must be emptied first — Terraform cannot delete a non-empty bucket. The two commands above handle that in order.
 
 This removes the EC2 instance, Elastic IP, security group, key pair, S3 bucket, VPC endpoint, and Route 53 A records. The hosted zone NS and SOA records are not touched.
 
@@ -80,14 +88,16 @@ This removes the EC2 instance, Elastic IP, security group, key pair, S3 bucket, 
 
 ## Deploying after rebuild
 
-Backend deploys are fully automatic — push to `main` and GitHub Actions handles the rest.
+**Backend** — fully automatic. Push to `main` and GitHub Actions builds the Docker image, pushes to Docker Hub, and restarts the containers on EC2. No manual steps needed.
 
-Frontend is run automatically by Terraform on `apply`. To deploy manually:
+**Frontend** — manual. There is no CI/CD for the frontend. Build and sync to S3 from the `tracker_client` repo whenever you have changes:
 ```bash
 cd ../tracker_client
 yarn build
 aws s3 sync ./dist s3://jamesisonline --delete
 ```
+
+Terraform also runs this automatically on `apply` (initial setup only).
 
 ---
 

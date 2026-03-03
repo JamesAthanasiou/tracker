@@ -19,8 +19,9 @@ resource "aws_s3_bucket_public_access_block" "frontend" {
 # Free Gateway endpoint — gives the EC2 instance private access to S3
 # without traffic going over the public internet.
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id       = data.aws_vpc.default.id
-  service_name = "com.amazonaws.${var.region}.s3"
+  vpc_id          = data.aws_vpc.default.id
+  service_name    = "com.amazonaws.${var.region}.s3"
+  route_table_ids = data.aws_route_tables.default.ids
 
   tags = {
     Name        = "tracker-s3-endpoint-${var.environment}"

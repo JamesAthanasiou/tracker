@@ -34,6 +34,10 @@ data "aws_subnets" "default" {
   }
 }
 
+data "aws_route_tables" "default" {
+  vpc_id = data.aws_vpc.default.id
+}
+
 data "aws_route53_zone" "main" {
   name = "${var.domain}."
 }

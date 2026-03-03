@@ -11,7 +11,8 @@ resource "null_resource" "frontend_deploy" {
 
   provisioner "local-exec" {
     working_dir = var.frontend_path
-    command     = "yarn build && aws s3 sync ./dist s3://${aws_s3_bucket.frontend.id} --delete"
+    interpreter = ["/bin/zsh", "-l", "-c"]
+    command     = "VITE_API_URL=https://api.${var.domain} yarn install && yarn build && aws s3 sync ./dist s3://${aws_s3_bucket.frontend.id} --delete"
   }
 
   depends_on = [aws_s3_bucket_policy.frontend]
