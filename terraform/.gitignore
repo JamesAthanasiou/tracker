@@ -1,0 +1,14 @@
+# Terraform state — back this up manually or use an S3 backend
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Generated private keys
+*.pem
+
+# Your actual secrets
+terraform.tfvars
+
+# Crash logs
+crash.log

@@ -2,3 +2,10 @@ node_modules/
 .env
 dist/
 *.log
+
+# Terraform
+terraform/*.pem
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
