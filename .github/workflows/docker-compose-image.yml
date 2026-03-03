@@ -44,6 +44,11 @@ jobs:
               run: |
                   echo "${{ secrets.EC2_KEY_PERM }}" > key.pem
                   chmod 400 key.pem
+            # rsync is not installed by default on Amazon Linux. The ssh-deploy action
+            # uses rsync to sync files to the remote server, so we need to install it first.
+            - name: Install rsync on EC2
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_IP }} 'which rsync || sudo yum install -y rsync'
             # TODO: a way to only pull in these files and not the whole repo?
             - name: Pull Dockerfiles and compose.yml
               uses: easingthemes/ssh-deploy@v5.1.0
