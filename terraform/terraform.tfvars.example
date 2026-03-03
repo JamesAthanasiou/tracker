@@ -17,6 +17,7 @@ s3_bucket_name = "jamesisonline-test"
 db_name     = "app"
 db_user     = "postgres"
 db_password = "CHANGE_ME"   # use a strong password
+secret_key  = "CHANGE_ME"   # JWT signing secret — use a long random string
 db_port     = "5432"
 
 app_port    = "3000"

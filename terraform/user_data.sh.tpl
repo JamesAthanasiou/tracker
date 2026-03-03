@@ -35,6 +35,7 @@ DB_HOST=db
 DB_USER=${db_user}
 DB_PASSWORD=${db_password}
 DB_PORT=${db_port}
+SECRET_KEY=${secret_key}
 ENVEOF
 chown ec2-user:ec2-user /home/ec2-user/tracker/.env
 

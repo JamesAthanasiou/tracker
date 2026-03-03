@@ -54,6 +54,7 @@ resource "aws_instance" "tracker" {
     db_password = var.db_password
     db_port     = var.db_port
     app_port    = var.app_port
+    secret_key  = var.secret_key
   })
 
   root_block_device {
